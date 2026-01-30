@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"hello-world/handlers"
+	"helloworld/handlers"
 )
 
 func main() {

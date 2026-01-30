@@ -3,9 +3,7 @@ package handlers
 import (
 	"html/template"
 	"net/http"
-	"path/filepath"
 	"time"
-	
 	"github.com/gorilla/mux"
 )
 
