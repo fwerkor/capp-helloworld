@@ -98,6 +98,8 @@ build: check-config $(BIN_DIR)
 			--build-arg APP_VERSION=$(APP_VERSION) \
 			--build-arg BUILD_TIME=$(BUILD_TIME) \
 			--build-arg APP_NAME="$(APP_NAME)" \
+			--build-arg APP_NICKNAME="$(APP_NICKNAME)" \
+			--build-arg APP_VERSION="$(APP_VERSION)" \
 			--build-arg APP_DESCRIPTION="$(APP_DESCRIPTION)" \
 			--build-arg APP_SOURCE="$(APP_SOURCE)" \
 			--build-arg APP_AUTHOR="$(APP_AUTHOR)" \
