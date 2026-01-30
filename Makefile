@@ -4,8 +4,16 @@ include config.mk
 # 变量定义
 BIN_DIR := bin
 TEMP_DIR := .tmp
-APP_VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo "v0.0.0")
 BUILD_TIME := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+APP_VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo "v0.0.0")
+APP_NICKNAME ?= unknown
+APP_DESCRIPTION ?= unknown
+APP_SOURCE ?= unknown
+APP_AUTHOR ?= unknown
+APP_VENDOR ?= unknown
+APP_LICENSE ?= unknown
+APP_DOCS ?= unknown
 
 # 默认架构列表
 ARCHITECTURES ?= amd64 arm64
