@@ -1,0 +1,5 @@
+# 忽略不必要的文件
+bin/
+.vscode/
+.idea/
+.tmp/

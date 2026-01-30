@@ -1,0 +1,22 @@
+# 忽略不必要的文件
+.git/
+.gitignore
+*.md
+LICENSE
+Makefile
+config.mk
+bin/
+.dockerignore
+.gitignore
+*.tar
+*.tar.gz
+Dockerfile*
+docker-compose*.yml
+.vscode/
+.idea/
+*.log
+.env
+.env.local
+test/
+vendor/
+coverage.out
