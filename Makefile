@@ -140,6 +140,7 @@ package: $(BIN_DIR)
 		TMP_CPK_DIR="$(TMP_DIR)/$(APP_NAME)_$$arch"; \
 		echo "处理架构 $$arch..."; \
 		mkdir -p "$$TMP_CPK_DIR"; \
+		cd $(BIN_DIR)/..; \
 		cp "$$IMG_TAR" "$$TMP_CPK_DIR/image.tar"; \
 		cp "$(MANIFEST_JSON)" "$$TMP_CPK_DIR/"; \
 		if [ -n "$(FILES_EXT)" ]; then \
@@ -148,6 +149,7 @@ package: $(BIN_DIR)
 			done; \
 		fi; \
 		cd "$$TMP_CPK_DIR" && tar -zcf "image_$$arch.tar.gz" *; \
+		cd $(BIN_DIR)/..; \
 		mv "$$TMP_CPK_DIR/image_$$arch.tar.gz" "$$CPK_FILE"; \
 		echo "已创建: $$CPK_FILE"; \
 		cd $(BIN_DIR)/..; \
