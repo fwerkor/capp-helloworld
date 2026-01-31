@@ -152,7 +152,7 @@ package: $(BIN_DIR)
 		echo "已创建: $$CPK_FILE"; \
 	done
 	
-	rm -rf $(TMP_DIR)
+	@rm -rf $(TMP_DIR)
 	@echo "打包完成!"
 
 # 用于分割架构列表的逗号变量
