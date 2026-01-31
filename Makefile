@@ -146,20 +146,14 @@ package:
 		
 		@echo "处理架构 $(arch)..."\
 		mkdir -p $(TMP_CPK_DIR)\
-		# 复制镜像文件并重命名\
 		cp $(IMG_TAR) $(TMP_CPK_DIR)/image.tar\
-		# 复制 manifest.json\
 		cp $(MANIFEST_JSON) $(TMP_CPK_DIR)/\
-		# 复制 FILES_EXT 中指定的文件\
 		$(if $(FILES_EXT),\
 			$(foreach file,$(FILES_EXT),\
 				cp $(file) $(TMP_CPK_DIR)/ 2>/dev/null || true\
 			)\
 		)\
-		
-		# 打包为 gz 文件
 		cd $(TMP_CPK_DIR) && tar -czf image_$(arch).gz *\
-		# 重命名为 cpk\
 		mv $(TMP_CPK_DIR)/image_$(arch).gz $(CPK_FILE)\
 		@echo "已创建: $(CPK_FILE)"\
 	)
@@ -168,10 +162,6 @@ package:
 	rm -rf $(TMP_DIR)
 	@echo "打包完成!"
 
-# 定义 package 目标
-.PHONY: package
-package:
-	$(call package)
 
 # 用于分割架构列表的逗号变量
 comma := ,

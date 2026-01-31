@@ -40,8 +40,8 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 	
 	// 准备页面数据
 	data := PageData{
-		Title:      "Go Hello World",
-		Message:    "欢迎来到Go语言的美丽世界！",
+		Title:      "CAPP Hello World",
+		Message:    "欢迎来到CapOS的美丽世界！",
 		Time:       time.Now().Format("2006-01-02 15:04:05"),
 		VisitorIP:  ip,
 		Background: getRandomBackground(),
