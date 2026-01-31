@@ -2,7 +2,7 @@
 include config.mk
 
 # 变量定义
-BIN_DIR := bin
+BIN_DIR := $(abspath bin)
 TEMP_DIR := .tmp
 BUILD_TIME := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 
