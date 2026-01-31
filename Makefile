@@ -143,7 +143,7 @@ package: $(BIN_DIR)
 		cd $(BIN_DIR)/..; \
 	done
 	@echo "正在创建多架构包..."
-	$(eval MULTI_ARCH_CPK := $(BIN_DIR)/$(APP_NAME)_$(APP_VERSION)_multiarch.cpk)
+	$(eval MULTI_ARCH_CPK := $(BIN_DIR)/$(APP_NAME)_$(APP_VERSION)_universal.cpk)
 	$(eval MULTI_TMP_DIR := $(TMP_DIR)/multiarch_unified)
 	@mkdir -p "$(MULTI_TMP_DIR)"
 	@cp "$(APP_CONFIG)" "$(MULTI_TMP_DIR)/" || { echo "错误：无法复制config.yaml"; exit 1; }
