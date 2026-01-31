@@ -64,9 +64,8 @@ WORKDIR /app
 # 复制证书和二进制文件
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /output/app /app
-WORKDIR /app
-COPY templates ./templates
-COPY static ./static
+COPY templates /templates
+COPY static /static
 
 # 设置入口点
 ENTRYPOINT ["/app"]
