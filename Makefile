@@ -147,8 +147,8 @@ package: $(BIN_DIR)
 				cp "$$file" "$$TMP_CPK_DIR/" 2>/dev/null || true; \
 			done; \
 		fi; \
-		cd "$$TMP_CPK_DIR" && tar -czf "image_$$arch.gz" *; \
-		mv "$$TMP_CPK_DIR/image_$$arch.gz" "$$CPK_FILE"; \
+		cd "$$TMP_CPK_DIR" && tar -zcvf "image_$$arch.tar.gz" *; \
+		mv "$$TMP_CPK_DIR/image_$$arch.tar.gz" "$$CPK_FILE"; \
 		echo "已创建: $$CPK_FILE"; \
 	done
 	
