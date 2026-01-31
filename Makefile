@@ -112,10 +112,7 @@ build: check-config $(BIN_DIR)
 	@echo "$(GREEN)所有架构构建完成！$(NC)"
 
 
-
-include config.mk
-
-package:
+package: $(BIN_DIR)
 	# 1. 生成 manifest.json
 	$(eval APP_NAME := $(shell echo "$(APP_NAME)" | sed 's/[^a-zA-Z0-9.-]/-/g'))
 	$(eval TMP_DIR := $(shell mktemp -d))
@@ -139,29 +136,27 @@ package:
 	@echo '}' >> $(MANIFEST_JSON)
 	
 	# 2. 处理每个架构的镜像文件
-	$(foreach arch,$(subst $(comma), ,$(ARCHITECTURES)),\
-		$(eval IMG_TAR := $(BIN_DIR)/image_$(arch).tar)\
-		$(eval CPK_FILE := $(BIN_DIR)/$(APP_NAME)_$(APP_VERSION)_$(arch).cpk)\
-		$(eval TMP_CPK_DIR := $(TMP_DIR)/$(APP_NAME)_$(arch))\
-		
-		@echo "处理架构 $(arch)..."\
-		mkdir -p $(TMP_CPK_DIR)\
-		cp $(IMG_TAR) $(TMP_CPK_DIR)/image.tar\
-		cp $(MANIFEST_JSON) $(TMP_CPK_DIR)/\
-		$(if $(FILES_EXT),\
-			$(foreach file,$(FILES_EXT),\
-				cp $(file) $(TMP_CPK_DIR)/ 2>/dev/null || true\
-			)\
-		)\
-		cd $(TMP_CPK_DIR) && tar -czf image_$(arch).gz *\
-		mv $(TMP_CPK_DIR)/image_$(arch).gz $(CPK_FILE)\
-		@echo "已创建: $(CPK_FILE)"\
-	)
+	@for arch in $(ARCHITECTURES); do \
+		IMG_TAR="$(BIN_DIR)/image_$$arch.tar"; \
+		CPK_FILE="$(BIN_DIR)/$(APP_NAME)_$(APP_VERSION)_$$arch.cpk"; \
+		TMP_CPK_DIR="$(TMP_DIR)/$(APP_NAME)_$$arch"; \
+		echo "处理架构 $$arch..."; \
+		mkdir -p "$$TMP_CPK_DIR"; \
+		cp "$$IMG_TAR" "$$TMP_CPK_DIR/image.tar"; \
+		cp "$(MANIFEST_JSON)" "$$TMP_CPK_DIR/"; \
+		if [ -n "$(FILES_EXT)" ]; then \
+			for file in $(FILES_EXT); do \
+				cp "$$file" "$$TMP_CPK_DIR/" 2>/dev/null || true; \
+			done; \
+		fi; \
+		cd "$$TMP_CPK_DIR" && tar -czf "image_$$arch.gz" *; \
+		mv "$$TMP_CPK_DIR/image_$$arch.gz" "$$CPK_FILE"; \
+		echo "已创建: $$CPK_FILE"; \
+	done
 	
 	# 3. 清理临时目录
 	rm -rf $(TMP_DIR)
 	@echo "打包完成!"
-
 
 # 用于分割架构列表的逗号变量
 comma := ,
