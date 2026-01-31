@@ -8,12 +8,12 @@ You can directly modify this repository to build your own applications.
 
 ```
 .
-├── bin              -> Compilation results
-├── config.yaml        -> Config
+├── bin              —> Compilation results
+├── config.yaml      —> Config
 ├── Dockerfile
 ├── go.mod
 ├── go.sum
-├── handlers         —> Request processor
+├── handlers
 │   └── handlers.go 
 ├── main.go          —> Main program
 ├── Makefile
