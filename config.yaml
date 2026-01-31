@@ -57,7 +57,7 @@ container:
 # 健康检查配置
 healthcheck:
   enabled: true             # 是否启用健康检查
-  cmd:     # 健康检查命令
+  cmd: curl -f "http://localhost/"  # 健康检查命令
   interval: 30s             # 健康检查间隔
   retries: 3                # 健康检查重试次数
   start_period: 5s          # 健康检查启动等待时间
