@@ -166,6 +166,7 @@ package: $(BIN_DIR)
 			echo "错误：架构 $$arch 的镜像文件 $$IMG_TAR 不存在"; exit 1; \
 		fi; \
 	done
+	@cd $(BIN_DIR)/..
 	@cd "$$MULTI_TMP_DIR" && tar -zcf "../multiarch.tar.gz" *
 	@mv "$(TMP_DIR)/multiarch.tar.gz" "$$MULTI_ARCH_CPK" || { echo "错误：无法生成多架构cpk包"; exit 1; }
 	@echo "已创建多架构统一包: $$MULTI_ARCH_CPK"
