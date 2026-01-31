@@ -1,5 +1,22 @@
-# 包含配置文件
-include config.mk
+# 定义 YAML 配置文件路径
+CONFIG_YAML := ./config.yaml
+
+# 检查 Go 版本 yq 是否安装
+ifeq (, $(shell which yq))
+$(error "请先安装 Go 版本 yq 工具，安装指南：https://github.com/mikefarah/yq")
+endif
+
+APP_NAME := $(shell yq eval '.app.name' $(CONFIG_YAML))
+APP_VERSION := $(shell yq eval '.app.version' $(CONFIG_YAML))
+APP_DESCRIPTION := $(shell yq eval '.app.description' $(CONFIG_YAML))
+APP_SOURCE := $(shell yq eval '.app.source' $(CONFIG_YAML))
+APP_AUTHOR := $(shell yq eval '.app.author' $(CONFIG_YAML))
+APP_VENDOR := $(shell yq eval '.app.vendor' $(CONFIG_YAML))
+APP_LICENSE := $(shell yq eval '.app.license' $(CONFIG_YAML))
+APP_DOCS := $(shell yq eval '.app.docs' $(CONFIG_YAML))
+ARCHITECTURES := $(shell yq eval '.build.architectures | join(" ")' $(CONFIG_YAML))
+FILES_EXT := $(shell yq eval '.build.extra_files | map(basename | split(".")[-1]) | unique | join(" ")' $(CONFIG_YAML))
+
 
 # 变量定义
 BIN_DIR := $(abspath bin)
@@ -39,18 +56,7 @@ help:
 	@echo "  make package          - 仅将镜像文件打包"
 	@echo "  make clean        - 清理构建文件"
 	@echo "  make help         - 显示此帮助信息"
-	@echo ""
-	@echo "$(YELLOW)配置变量（在config.mk中设置）:$(NC)"
-	@echo "  ARCHITECTURES   - 目标架构列表（默认：amd64 arm64）"
-	@echo "  APP_NAME        - 应用唯一名称"
-	@echo "  APP_VERSION     - 应用版本"
-	@echo "  APP_NICKNAME    - 应用显示名称"
-	@echo "  APP_DESCRIPTION - 应用描述"
-	@echo "  APP_SOURCE      - 应用源码地址"
-	@echo "  APP_AUTHOR      - 应用作者"
-	@echo "  APP_VENDOR      - 供应商"
-	@echo "  APP_LICENSE     - 许可证"
-	@echo "  APP_DOCS        - 文档地址"
+
 
 # 创建必要的目录
 $(BIN_DIR):
@@ -62,7 +68,7 @@ $(TEMP_DIR):
 # 检查必需配置变量
 check-config:
 ifndef APP_NAME
-	$(error APP_NAME 未在 config.mk 中定义！)
+	$(error APP_NAME 未定义！)
 endif
 
 # 构建所有架构的镜像
@@ -98,7 +104,6 @@ build: check-config $(BIN_DIR)
 			--build-arg APP_VERSION=$(APP_VERSION) \
 			--build-arg BUILD_TIME=$(BUILD_TIME) \
 			--build-arg APP_NAME="$(APP_NAME)" \
-			--build-arg APP_NICKNAME="$(APP_NICKNAME)" \
 			--build-arg APP_VERSION="$(APP_VERSION)" \
 			--build-arg APP_DESCRIPTION="$(APP_DESCRIPTION)" \
 			--build-arg APP_SOURCE="$(APP_SOURCE)" \
@@ -115,24 +120,7 @@ build: check-config $(BIN_DIR)
 package: $(BIN_DIR)
 	$(eval APP_NAME := $(shell echo "$(APP_NAME)" | sed 's/[^a-zA-Z0-9.-]/-/g'))
 	$(eval TMP_DIR := $(shell mktemp -d))
-	$(eval MANIFEST_JSON := $(TMP_DIR)/manifest.json)
-	
-	@echo "生成 manifest.json..."
-	@echo '{' > $(MANIFEST_JSON)
-	@echo '  "name": "$(APP_NAME)",' >> $(MANIFEST_JSON)
-	@echo '  "version": "$(APP_VERSION)",' >> $(MANIFEST_JSON)
-	@echo '  "nickname": "$(APP_NICKNAME)",' >> $(MANIFEST_JSON)
-	@echo '  "description": "$(APP_DESCRIPTION)",' >> $(MANIFEST_JSON)
-	@echo '  "source": "$(APP_SOURCE)",' >> $(MANIFEST_JSON)
-	@echo '  "author": "$(APP_AUTHOR)",' >> $(MANIFEST_JSON)
-	@echo '  "vendor": "$(APP_VENDOR)",' >> $(MANIFEST_JSON)
-	@echo '  "license": "$(APP_LICENSE)",' >> $(MANIFEST_JSON)
-	@echo '  "docs": "$(APP_DOCS)",' >> $(MANIFEST_JSON)
-	@echo '  "depends_opkg": "$(DEPENDS_OPKG)",' >> $(MANIFEST_JSON)
-	@echo '  "depends_capp": "$(DEPENDS_CAPP)",' >> $(MANIFEST_JSON)
-	@echo '  "architectures": "$(ARCHITECTURES)",' >> $(MANIFEST_JSON)
-	@echo '  "files_ext": "$(FILES_EXT)"' >> $(MANIFEST_JSON)
-	@echo '}' >> $(MANIFEST_JSON)
+	$(eval APP_CONFIG := $(BIN_DIR)/../config.yaml)
 	
 	@for arch in $(ARCHITECTURES); do \
 		IMG_TAR="$(BIN_DIR)/image_$$arch.tar"; \
@@ -142,7 +130,7 @@ package: $(BIN_DIR)
 		mkdir -p "$$TMP_CPK_DIR"; \
 		cd $(BIN_DIR)/..; \
 		cp "$$IMG_TAR" "$$TMP_CPK_DIR/image.tar"; \
-		cp "$(MANIFEST_JSON)" "$$TMP_CPK_DIR/"; \
+		cp "$(APP_CONFIG)" "$$TMP_CPK_DIR/"; \
 		if [ -n "$(FILES_EXT)" ]; then \
 			for file in $(FILES_EXT); do \
 				cp "$$file" "$$TMP_CPK_DIR/" 2>/dev/null || true; \
