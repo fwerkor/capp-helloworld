@@ -150,6 +150,7 @@ package: $(BIN_DIR)
 		cd "$$TMP_CPK_DIR" && tar -zcf "image_$$arch.tar.gz" *; \
 		mv "$$TMP_CPK_DIR/image_$$arch.tar.gz" "$$CPK_FILE"; \
 		echo "已创建: $$CPK_FILE"; \
+		cd $(BIN_DIR)/.. \
 	done
 	
 	@rm -rf $(TMP_DIR)
