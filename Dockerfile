@@ -44,12 +44,15 @@ FROM scratch
 
 # 元数据标签
 ARG APP_NAME
+ARG APP_VERSION
+ARG APP_NICKNAME
 ARG APP_DESCRIPTION
 ARG APP_SOURCE
 ARG APP_AUTHOR
 ARG APP_VENDOR
 ARG APP_LICENSE
 ARG APP_DOCS
+ARG BUILD_TIME=$(date +%Y%m%d-%H%M%S)
 LABEL org.opencontainers.image.title="${APP_NAME}" \
       org.opencontainers.image.description="${APP_DESCRIPTION}" \
       org.opencontainers.image.source="${APP_SOURCE}" \
