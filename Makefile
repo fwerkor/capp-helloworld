@@ -118,10 +118,6 @@ build: check-config $(BIN_DIR)
 
 
 package: $(BIN_DIR)
-	@echo ""
-	@echo ""
-	@echo ""
-	@echo ""
 	$(eval APP_NAME := $(shell echo "$(APP_NAME)" | sed 's/[^a-zA-Z0-9.-]/-/g'))
 	$(eval TMP_DIR := $(shell mktemp -d))
 	$(eval APP_CONFIG := $(BIN_DIR)/../config.yaml)
@@ -147,28 +143,28 @@ package: $(BIN_DIR)
 		cd $(BIN_DIR)/..; \
 	done
 	@echo "正在创建多架构包..."
-	$(eval MULTI_ARCH_CPK := $(BIN_DIR)/$(APP_NAME)_$(APP_VERSION)_universal.cpk)
+	$(eval MULTI_ARCH_CPK := $(BIN_DIR)/$(APP_NAME)_$(APP_VERSION)_multiarch.cpk)
 	$(eval MULTI_TMP_DIR := $(TMP_DIR)/multiarch_unified)
 	@mkdir -p "$(MULTI_TMP_DIR)"
 	@cp "$(APP_CONFIG)" "$(MULTI_TMP_DIR)/" || { echo "错误：无法复制config.yaml"; exit 1; }
 	@if [ -n "$(FILES_EXT)" ]; then \
 		echo "复制扩展文件: $(FILES_EXT)"; \
 		for file in $(FILES_EXT); do \
-			cp "$(file)" "$(MULTI_TMP_DIR)/" 2>/dev/null || echo "警告：跳过不存在的扩展文件 $$file"; \
+			cp "$$file" "$(MULTI_TMP_DIR)/" 2>/dev/null || echo "警告：跳过不存在的扩展文件 $$file"; \
 		done; \
 	fi
 	@for arch in $(ARCHITECTURES); do \
 		IMG_TAR="$(BIN_DIR)/image_$$arch.tar"; \
 		if [ -f "$$IMG_TAR" ]; then \
-			cp "$(IMG_TAR)" "$(MULTI_TMP_DIR)/image_$(arch).tar" || { echo "错误：无法复制$$IMG_TAR"; exit 1; }; \
+			cp "$$IMG_TAR" "$(MULTI_TMP_DIR)/image_$$arch.tar" || { echo "错误：无法复制$$IMG_TAR"; exit 1; }; \
 			echo "已收集架构 $$arch 的镜像文件"; \
 		else \
 			echo "错误：架构 $$arch 的镜像文件 $$IMG_TAR 不存在"; exit 1; \
 		fi; \
 	done
-	@cd $(MULTI_TMP_DIR) && tar -zcf "../multiarch.tar.gz" *
-	@mv "$(TMP_DIR)/multiarch.tar.gz" "$$MULTI_ARCH_CPK" || { echo "错误：无法生成多架构cpk包"; exit 1; }
-	@echo "已创建多架构统一包: $$MULTI_ARCH_CPK"
+	@cd "$(MULTI_TMP_DIR)" && tar -zcf "../multiarch.cpk.tar.gz" *
+	@mv "$(TMP_DIR)/multiarch.cpk.tar.gz" "$(MULTI_ARCH_CPK)" || { echo "错误：无法生成多架构cpk包"; exit 1; }
+	@echo "已创建多架构统一包: $(MULTI_ARCH_CPK)"
 	
 	@rm -rf $(TMP_DIR)
 	@echo "打包完成!"
