@@ -150,17 +150,17 @@ package: $(BIN_DIR)
 	$(eval MULTI_ARCH_CPK := $(BIN_DIR)/$(APP_NAME)_$(APP_VERSION)_universal.cpk)
 	$(eval MULTI_TMP_DIR := $(TMP_DIR)/multiarch_unified)
 	@mkdir -p "$(MULTI_TMP_DIR)"
-	@cp "$(APP_CONFIG)" "$$MULTI_TMP_DIR/" || { echo "错误：无法复制config.yaml"; exit 1; }
+	@cp "$(APP_CONFIG)" "$(MULTI_TMP_DIR)/" || { echo "错误：无法复制config.yaml"; exit 1; }
 	@if [ -n "$(FILES_EXT)" ]; then \
 		echo "复制扩展文件: $(FILES_EXT)"; \
 		for file in $(FILES_EXT); do \
-			cp "$$file" "$$MULTI_TMP_DIR/" 2>/dev/null || echo "警告：跳过不存在的扩展文件 $$file"; \
+			cp "$(file)" "$(MULTI_TMP_DIR)/" 2>/dev/null || echo "警告：跳过不存在的扩展文件 $$file"; \
 		done; \
 	fi
 	@for arch in $(ARCHITECTURES); do \
 		IMG_TAR="$(BIN_DIR)/image_$$arch.tar"; \
 		if [ -f "$$IMG_TAR" ]; then \
-			cp "$$IMG_TAR" "$$MULTI_TMP_DIR/image_$$arch.tar" || { echo "错误：无法复制$$IMG_TAR"; exit 1; }; \
+			cp "$(IMG_TAR)" "$(MULTI_TMP_DIR)/image_$(arch).tar" || { echo "错误：无法复制$$IMG_TAR"; exit 1; }; \
 			echo "已收集架构 $$arch 的镜像文件"; \
 		else \
 			echo "错误：架构 $$arch 的镜像文件 $$IMG_TAR 不存在"; exit 1; \
