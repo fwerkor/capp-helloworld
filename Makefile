@@ -15,7 +15,7 @@ APP_VENDOR := $(shell yq eval '.app.vendor' $(CONFIG_YAML))
 APP_LICENSE := $(shell yq eval '.app.license' $(CONFIG_YAML))
 APP_DOCS := $(shell yq eval '.app.docs' $(CONFIG_YAML))
 ARCHITECTURES := $(shell yq eval '.build.architectures | join(" ")' $(CONFIG_YAML))
-FILES_EXT := $(shell yq eval '.build.extra_files | map(basename | split(".")[-1]) | unique | join(" ")' $(CONFIG_YAML))
+FILES_EXT := $(shell yq eval '.build.extra_files | map(. | basename | split(".")[-1]) | unique | join(" ")' $(CONFIG_YAML))
 
 
 # 变量定义
