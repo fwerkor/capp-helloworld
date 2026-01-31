@@ -118,6 +118,10 @@ build: check-config $(BIN_DIR)
 
 
 package: $(BIN_DIR)
+	@echo ""
+	@echo ""
+	@echo ""
+	@echo ""
 	$(eval APP_NAME := $(shell echo "$(APP_NAME)" | sed 's/[^a-zA-Z0-9.-]/-/g'))
 	$(eval TMP_DIR := $(shell mktemp -d))
 	$(eval APP_CONFIG := $(BIN_DIR)/../config.yaml)
@@ -145,7 +149,7 @@ package: $(BIN_DIR)
 	@echo "正在创建多架构包..."
 	$(eval MULTI_ARCH_CPK := $(BIN_DIR)/$(APP_NAME)_$(APP_VERSION)_universal.cpk)
 	$(eval MULTI_TMP_DIR := $(TMP_DIR)/multiarch_unified)
-	@mkdir -p "$$MULTI_TMP_DIR"
+	@mkdir -p "$(MULTI_TMP_DIR)"
 	@cp "$(APP_CONFIG)" "$$MULTI_TMP_DIR/" || { echo "错误：无法复制config.yaml"; exit 1; }
 	@if [ -n "$(FILES_EXT)" ]; then \
 		echo "复制扩展文件: $(FILES_EXT)"; \
