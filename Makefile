@@ -113,7 +113,6 @@ build: check-config $(BIN_DIR)
 
 
 package: $(BIN_DIR)
-	# 1. 生成 manifest.json
 	$(eval APP_NAME := $(shell echo "$(APP_NAME)" | sed 's/[^a-zA-Z0-9.-]/-/g'))
 	$(eval TMP_DIR := $(shell mktemp -d))
 	$(eval MANIFEST_JSON := $(TMP_DIR)/manifest.json)
@@ -135,7 +134,6 @@ package: $(BIN_DIR)
 	@echo '  "files_ext": "$(FILES_EXT)"' >> $(MANIFEST_JSON)
 	@echo '}' >> $(MANIFEST_JSON)
 	
-	# 2. 处理每个架构的镜像文件
 	@for arch in $(ARCHITECTURES); do \
 		IMG_TAR="$(BIN_DIR)/image_$$arch.tar"; \
 		CPK_FILE="$(BIN_DIR)/$(APP_NAME)_$(APP_VERSION)_$$arch.cpk"; \
@@ -154,7 +152,6 @@ package: $(BIN_DIR)
 		echo "已创建: $$CPK_FILE"; \
 	done
 	
-	# 3. 清理临时目录
 	rm -rf $(TMP_DIR)
 	@echo "打包完成!"
 
